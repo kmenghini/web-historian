@@ -26,11 +26,12 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  var content = [];
+  // var content = [];
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     // console.log('testing3... ', JSON.parse(JSON.stringify(data)).split('\n'));
-    content = JSON.parse(JSON.stringify(data)).split('\n');  
-    callback(JSON.parse(JSON.stringify(data)).split('\n'));
+    // content = data.split('\n');  
+    console.log(data.split('\n'));
+    callback(data.split('\n'));
   });
 // console.log('CONTENT', content);
 };
@@ -56,11 +57,16 @@ exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
+  
   for (var i = 0; i < urls.length; i++) {
     var url = urls[i];
     exports.isUrlArchived(url, function(exists) {
-      if (!exists) {
-        fs.writeFile(exports.paths.archivedSites + '/' + url, 'blah blah');
+      if (!exists) {    
+        fs.writeFile(exports.paths.archivedSites + '/' + url, 'use html fetcher', 'utf8', function(err) {
+          if (err) {
+            throw err;
+          }
+        });
       }
     });
   }

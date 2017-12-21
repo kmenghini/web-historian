@@ -9,16 +9,18 @@ exports.handleRequest = function (req, res) {
   var {headers, method, url} = req;
   var filePath = '.' + url;
   var headers = http.headers;
-
-  // fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', function(err, data) {
-  //   if (err) {
-  //     console.log('ERROR!');
-  //     throw err;
-  //   }   
-  //   res.writeHead(200, headers);
-  //   res.write(data);
-  //   res.end();
-  // });
+  
+  // if (filePath === './') {
+  //   fs.readFile(archive.paths.siteAssets + '/index.html', 'utf8', function(err, data) {
+  //     if (err) {
+  //       console.log('ERROR!');
+  //       throw err;
+  //     }   
+  //     res.writeHead(200, headers);
+  //     res.write(data);
+  //     res.end();
+  //   });
+  // }
 
   // http.serveAssets(res, archive.paths.siteAssets + '/index.html', function() {
   //   console.log('done serving asset!');
