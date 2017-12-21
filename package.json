@@ -19,6 +19,8 @@
   "dependencies": {
     "bluebird": "^3.3.4",
     "cron": "^1.1.0",
+    "node-inspector": "^1.1.1",
+    "nodemon": "^1.14.0",
     "request": "^2.70.0",
     "underscore": "^1.8.3"
   },
