@@ -30,7 +30,6 @@ exports.readListOfUrls = function(callback) {
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
     // console.log('testing3... ', JSON.parse(JSON.stringify(data)).split('\n'));
     // content = data.split('\n');  
-    console.log(data.split('\n'));
     callback(data.split('\n'));
   });
 // console.log('CONTENT', content);

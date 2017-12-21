@@ -7,7 +7,8 @@ var fs = require('fs');
 
 exports.handleRequest = function (req, res) {
   var {headers, method, url} = req;
-  var filePath = '.' + url;
+  console.log('Method...', method);
+  // var filePath = '.' + url;
   var headers = http.headers;
   
   // if (filePath === './') {
@@ -25,53 +26,26 @@ exports.handleRequest = function (req, res) {
   // http.serveAssets(res, archive.paths.siteAssets + '/index.html', function() {
   //   console.log('done serving asset!');
   // });
- 
   if (method === 'GET') {
-    archive.isUrlInList(filePath, function(exists) {
-      if (exists) {
-        archive.isUrlArchived(filePath, function(exists) {
-          if (exists) {
-            fs.readFile(archive.paths.archivedSites + filePath.slice(1), 'utf8', function(err, data) {
-              console.log('file path...', archive.paths.archivedSites + filePath.slice(1));
-              if (err) {
-                console.log('ERROR!');
-                throw err;
-              }   
-              res.writeHead(200, headers);
-              res.write(data);
-              res.end();
-            });
-          } else {
-            fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', function(err, data) {
-              if (err) {
-                console.log('ERROR!');
-                throw err;
-              }   
-              res.writeHead(200, headers);
-              res.write(data);
-              res.end();
-            });
-          }
-        });
-      } else {
-        archive.addUrlToList(filePath, function() {
-          fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', function(err, data) {
-            if (err) {
-              console.log('ERROR!');
-              throw err;
-            }   
-            res.writeHead(200, headers);
-            res.write(data);
-            res.end();
-          });
-        });
-      }
+    if (url === '/') {
+      http.serveAssets(res, archive.paths.siteAssets + '/index.html', function() {
+        console.log('done!');
+      }, method);
+    } else {
+      http.serveAssets(res, url, function() {
+        console.log('done!');
+      }, method);
+    }
+  } else if (method === 'POST') {
+    var body = '';
+    req.on('data', function(data) {
+      body += data;
+    });
+    req.on('end', function() {
+      body = body.slice(4);
+      http.serveAssets(res, body, function() {
+        console.log('done!');
+      }, method);
     });
   }
-
-  
-
-
-
-
 };
