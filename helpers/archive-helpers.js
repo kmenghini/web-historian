@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var request = require('request');
 var htmlFetcher = require('../workers/htmlfetcher.js');
 
 /*
@@ -27,13 +28,9 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
-  // var content = [];
   fs.readFile(exports.paths.list, 'utf8', function(err, data) {
-    // console.log('testing3... ', JSON.parse(JSON.stringify(data)).split('\n'));
-    // content = data.split('\n');  
     callback(data.split('\n'));
   });
-// console.log('CONTENT', content);
 };
 
 exports.isUrlInList = function(url, callback) {
@@ -49,27 +46,25 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
-  fs.appendFile(exports.paths.list, url + '\n', callback);
+  fs.appendFile(exports.paths.list, url + '\n', function(err, file) {
+    callback();
+  });
 };
 
 exports.isUrlArchived = function(url, callback) {
-  fs.exists(exports.paths.archivedSites + '/' + url, callback);
+  fs.exists(exports.paths.archivedSites + '/' + url, function(exists) {
+    callback(exists);
+  });
 };
 
 exports.downloadUrls = function(urls) {
   for (var i = 0; i < urls.length; i++) {
-    var url = urls[i];
-    console.log(urls);
-    exports.isUrlArchived(url, function(exists) {
-      if (!exists) {  
-        console.log(url, exists);
-        htmlFetcher.fetchHtml(url, function(content) {
-          fs.writeFile(exports.paths.archivedSites + '/' + url, content, 'utf8', function(err) {
-            if (err) {
-              throw err;
-            }
-          });
-        });  
+    if (!urls[i]) {
+      return;
+    }
+    exports.isUrlArchived(urls[i], function(exists) {
+      if (!exists) {
+        request('http://' + urls[i]).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + urls[i]));
       }
     });
   }

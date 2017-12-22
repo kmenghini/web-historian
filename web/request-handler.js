@@ -16,16 +16,16 @@ exports.handleRequest = function (req, res) {
         console.log('done!');
       }, method);
     } 
-  } else if (method === 'POST') {
-    var body = '';
-    req.on('data', function(data) {
-      body += data;
-    });
-    req.on('end', function() {
-      body = body.slice(4);
-      http.serveAssets(res, body, function() {
-        console.log('done!');
-      });
-    });
+  // } else if (method === 'POST') {
+  //   var body = '';
+  //   req.on('data', function(data) {
+  //     body += data;
+  //   });
+  //   req.on('end', function() {
+  //     body = body.slice(4);
+  //     http.serveAssets(res, body, function() {
+  //       console.log('done!');
+  //     });
+  //   });
   }
 };
