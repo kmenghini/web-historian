@@ -143,8 +143,8 @@ describe('archive helpers', function() {
   });
 
   describe('#downloadUrls', function () {
-    it.only('should download all pending urls in the list', function (done) {
-      var urlArray = ['www.example.com', 'www.google.com'];
+    it('should download all pending urls in the list', function (done) {
+      var urlArray = ['www.amazon.com'];
       archive.downloadUrls(urlArray);
 
       // Ugly hack to wait for all downloads to finish.

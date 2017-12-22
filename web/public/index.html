@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="styles.css" /> -->
 </head>
 <body>
   Enter a URL here:
   <form method="POST">
     <input type="input" name="url"></input>
   </form>
-  <script src='../request-handler.js'></script>
+  <script>
+    // $(document).ready(function() {
+    //   $('input').keypress(function(e) {
+    //     if (e.which === 13) {
+    //       console.log('INPUT...', $('input').val() );
+          
+    //       var options = {
+    //         host: '/',
+    //         port: 80,
+    //         method: 'POST'
+    //       };
+          
+    //       var req = http.request(options, function(res) {
+    //         res.setEncoding('utf8');
+    //         res.on('data', function(chunk) {
+    //           content += chunk;
+    //         });
+    //         res.on('end', function() {
+    //           callback(content);
+    //         });
+    //       });
+    //       req.end();
+    //     }
+    //   });
+    // });
+  </script>
 </body>
 </html>

@@ -10,7 +10,7 @@ exports.headers = {
   'Content-Type': 'text/html'
 };
 
-exports.serveAssets = function(res, asset, callback, method) {
+exports.serveAssets = function(res, asset, callback) {
   var readFileCallBack = function(err, data) {
     if (err) {
       console.log('ERROR!');
@@ -21,47 +21,57 @@ exports.serveAssets = function(res, asset, callback, method) {
     res.end();
   };
 
-  if (method === 'GET') {
-    if (asset === archive.paths.siteAssets + '/index.html') {
-      fs.readFile(asset, 'utf8', readFileCallBack);
-      return;
-    }  
-
-    if (!asset.includes('www.')) {
-      res.writeHead(404, exports.headers);
-      res.end();
-      return;
-    }    
-
-    archive.isUrlArchived(asset, function(exists) {
-      if (exists) {
-        fs.readFile(archive.paths.archivedSites + asset, 'utf8', readFileCallBack);
-      } else {
-        fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', readFileCallBack);
-        archive.isUrlInList(asset, function(exists) {
-          if (!exists) {
-            archive.addUrlToList(asset, function() {
-              console.log('added to list!');
-            });
-          }
-        });
-      }
-    });  
-  } else if (method === 'POST') {
-    
-    archive.isUrlInList(asset, function(exists) {
-      if (!exists) {
-        archive.addUrlToList(asset + '\n', function(err, data) {
-          if (err) {
-            console.log('ERROR!');
-            throw err;
-          }   
-          res.writeHead(302, exports.headers);
-          res.end();
-        });
-      }
-    });
+  if (asset === archive.paths.siteAssets + '/index.html') {
+    fs.readFile(asset, 'utf8', readFileCallBack);
+    return;
   }
+
+  archive.isUrlArchived(asset, function(exists) {
+    if (exists) {
+      fs.readFile(archive.paths.archivedSites + '/' + asset, 'utf8', readFileCallBack);
+    } else {
+      fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', readFileCallBack);
+      archive.isUrlInList(asset, function(exists) {
+        if (!exists) {
+          archive.addUrlToList(asset, function() {
+            archive.readListOfUrls(function(urls) {
+              archive.downloadUrls(urls);
+            });
+          });
+        }
+      });
+    }
+  });  
+
+  //   archive.isUrlArchived(asset, function(exists) {
+  //     if (exists) {
+  //       fs.readFile(archive.paths.archivedSites + asset, 'utf8', readFileCallBack);
+  //     } else {
+  //       fs.readFile(archive.paths.siteAssets + '/loading.html', 'utf8', readFileCallBack);
+  //       archive.isUrlInList(asset, function(exists) {
+  //         if (!exists) {
+  //           archive.addUrlToList(asset, function() {
+  //             console.log('added to list!');
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });  
+  // } else if (method === 'POST') {
+  //   console.log('serving ')
+  //   archive.isUrlInList(asset, function(exists) {
+  //     if (!exists) {
+  //       archive.addUrlToList(asset + '\n', function(err, data) {
+  //         if (err) {
+  //           console.log('ERROR!');
+  //           throw err;
+  //         }   
+  //         res.writeHead(302, exports.headers);
+  //         res.end();
+  //       });
+  //     }
+  //   });
+  // }
 };
 
 
